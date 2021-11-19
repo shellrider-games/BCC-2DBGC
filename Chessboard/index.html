@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chessboard</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        background: linear-gradient(45deg, rgb(45, 37, 87), rgb(100, 90, 161));
+        font-family: sans-serif;
+        color: whitesmoke;
+        margin: 0;
+      }
+      #screen {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+      #gameCanvas {
+        background-color: white;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="screen">
+      <canvas width="512" height="512" id="gameCanvas"></canvas>
+      <div id="name">♘ Chessboard (but it is 10x10) ♘</div>
+    </div>
+    <script>
+        const colour1 = "#eeeed2";
+        const colour2 = "#769656";
+
+        const canvas = document.querySelector('#gameCanvas');
+        const context = canvas.getContext('2d');
+
+        //fill in complete canvas with colour1
+        context.fillStyle = colour1;
+        context.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
+
+        context.fillStyle = colour2;
+
+        const squareSide = canvas.clientWidth/10;
+        for(let row = 0; row < 10; row++){
+            for (let col = row%2; col < 10; col += 2){
+                context.fillRect(col*squareSide,row*squareSide,squareSide,squareSide);
+            }
+        }
+    </script>
+  </body>
+</html>
