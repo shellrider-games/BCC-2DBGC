@@ -42,8 +42,8 @@
         context.fillRect(0,0,canvas.clientWidth,canvas.clientHeight);
 
         context.fillStyle = colour2;
-
         const squareSide = canvas.clientWidth/10;
+        
         for(let row = 0; row < 10; row++){
             for (let col = row%2; col < 10; col += 2){
                 context.fillRect(col*squareSide,row*squareSide,squareSide,squareSide);
