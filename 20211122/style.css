@@ -1,0 +1,18 @@
+body {
+    background: linear-gradient(45deg, rgb(45, 37, 87), rgb(100, 90, 161));
+    font-family: sans-serif;
+    color: whitesmoke;
+    margin: 0;
+}
+#screen {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+#gameCanvas{
+    background-color: white;
+    border-radius: 0.5rem;
+}
