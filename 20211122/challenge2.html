@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Images</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        background: linear-gradient(45deg, rgb(45, 37, 87), rgb(100, 90, 161));
+        font-family: sans-serif;
+        color: whitesmoke;
+        margin: 0;
+      }
+      #screen {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+      #gameCanvas {
+        background-color: white;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="screen">
+      <canvas width="600" height="600" id="gameCanvas"></canvas>
+      <div id="name">Challenge 2</div>
+    </div>
+    <script>
+        const canvas = document.querySelector('#gameCanvas');
+        const context = canvas.getContext('2d');
+
+        const image = new Image();
+        image.src = './res/images/bird.png';
+        image.addEventListener('load', () => {
+            context.drawImage(image,0,0,image.naturalWidth/2-5,image.naturalHeight/2-5,45,45,image.naturalWidth/2-5,image.naturalHeight/2-5);
+            context.drawImage(image,image.naturalWidth/2,0,image.naturalWidth/2-5,image.naturalHeight/2-5,image.naturalWidth/2+55,45,image.naturalWidth/2-5,image.naturalHeight/2-5);
+            context.drawImage(image, 0,image.naturalHeight/2,image.naturalWidth/2-5,image.naturalHeight/2-5,45,image.naturalHeight/2+55,image.naturalWidth/2-5,image.naturalHeight/2-5);
+            context.drawImage(image, image.naturalWidth/2 ,image.naturalHeight/2,image.naturalWidth/2-5,image.naturalHeight/2-5,image.naturalWidth/2+55,image.naturalHeight/2+55,image.naturalWidth/2-5,image.naturalHeight/2-5);
+        });
+
+    </script>
+  </body>
+</html>
