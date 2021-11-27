@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dynamic Image</title>
+    <style>
+      body {
+        background: linear-gradient(45deg, rgb(87, 37, 56), rgb(161, 90, 125));
+        font-family: sans-serif;
+        color: whitesmoke;
+        margin: 0;
+      }
+      #screen {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+      #gameCanvas {
+        background-color: white;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="screen">
+      <canvas width="512" height="512" id="gameCanvas"></canvas>
+      <div id="name"><p>Dynamic Image</p></div>
+    </div>
+    <script src="./random-functions.js"></script>
+    <script>
+      //configuration
+      const numberOfElements = 3;
+      const safetyDistance = 10;
+      const wordList = [
+        "apple",
+        "banana",
+        "word",
+        "truck",
+        "premium",
+        "week",
+        "rope",
+        "join",
+        "coin",
+        "agile",
+        "goat",
+      ];
+
+      //define CONSTANTS of shapes
+      const ELLIPSE = 0;
+      const TEXT = 1;
+      const RECTANGLE = 2;
+      const TRIANGLE = 3;
+
+      //setup canvas
+      const canvas = document.querySelector("#gameCanvas");
+      const context = canvas.getContext("2d");
+
+      function randomAngle() {
+        return Math.random() * 2 * Math.PI;
+      }
+
+      //----------------------------------
+      //functions to draw different shapes
+      //----------------------------------
+
+      function drawEllipse() {
+        const radiusX = randomNumberBetween(60, 80);
+        const radiusY = randomNumberBetween(30, 59);
+
+        const randomPos = function () {
+          return randomNumberBetween(
+            radiusX + safetyDistance,
+            canvas.clientWidth - radiusX - safetyDistance
+          );
+        };
+
+        context.fillStyle = getRandomColor();
+        context.beginPath();
+        context.ellipse(
+          randomPos(),
+          randomPos(),
+          radiusX,
+          radiusY,
+          randomAngle(),
+          0,
+          2 * Math.PI
+        );
+        context.fill();
+      }
+
+      function drawText() {
+        const fontSize = `${randomNumberBetween(18, 32)}px`;
+
+        const randomPos = function () {
+          return randomNumberBetween(
+            32,
+            canvas.clientWidth - 120 - safetyDistance
+          );
+        };
+        const xPos = randomPos();
+        const yPos = randomPos();
+        const word = wordList[randomNumberBetween(0, wordList.length - 1)];
+
+        context.font = fontSize + " Arial";
+        context.fillStyle = getRandomColor();
+        context.lineWidth = "1px";
+        context.fillText(word, xPos, yPos);
+        context.strokeText(word, xPos, yPos);
+      }
+
+      function drawRectangle() {
+        const width = randomNumberBetween(60, 120);
+        const height = randomNumberBetween(60, 120);
+
+        const randomPos = function () {
+          return randomNumberBetween(
+            120 + safetyDistance,
+            canvas.clientWidth - 120
+          );
+        };
+
+        const xPos = randomPos();
+        const yPos = randomPos();
+
+        context.fillStyle = getRandomColor();
+        context.fillRect(xPos, yPos, width, height);
+      }
+
+      function drawTriangle() {
+        context.beginPath();
+        context.moveTo(
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientWidth - safetyDistance
+          ),
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientHeight - safetyDistance
+          )
+        );
+        context.lineTo(
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientWidth - safetyDistance
+          ),
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientHeight - safetyDistance
+          )
+        );
+        context.lineTo(
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientWidth - safetyDistance
+          ),
+          randomNumberBetween(
+            0 + safetyDistance,
+            canvas.clientHeight - safetyDistance
+          )
+        );
+        context.closePath();
+        context.fillStyle = getRandomColor();
+        context.fill();
+      }
+
+
+      //---------------
+      //selection logic
+      //---------------
+
+
+      /*
+      Returns an array of integers representing the different
+      shapes in this code.
+      */
+      function createShapes(size = 3) {
+        const shapes = [];
+        for (let i = 0; i < size; i++) {
+          let shape = undefined;
+          do {
+            shape = randomNumberBetween(0, 3);
+          } while (shapes.includes(shape));
+          shapes.push(shape);
+        }
+        return shapes;
+      }
+      
+      function drawShapesToCanvas(shapes) {
+        for (shape of shapes) {
+          switch (shape) {
+            case 0:
+              drawEllipse();
+              break;
+            case 1:
+              drawText();
+              break;
+            case 2:
+              drawRectangle();
+              break;
+            case 3:
+              drawTriangle();
+              break;
+            default:
+              console.error(`Error: ${shape} is an unknown shape`);
+          }
+        }
+      }
+
+      const shapes = createShapes(numberOfElements);
+      drawShapesToCanvas(shapes);
+
+    </script>
+  </body>
+</html>
