@@ -43,16 +43,4 @@ function setCanvasSizeToConfig(canvas) {
   canvas.setAttribute("height", CONFIG.canvasHeight);
 }
 
-function initGame() {
-  const canvas = document.querySelector("#gameCanvas");
-  context = canvas.getContext("2d");
-  setCanvasSizeToConfig(canvas);
-  setFontProperties(canvas);
-  lastTimestamp = performance.now();
-  ticks = 0;
-  requestAnimationFrame(update);
-}
 
-window.addEventListener("load", () => {
-  initGame();
-});

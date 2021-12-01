@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Confetti Circle</title>
+    <style>
+      body {
+        background: linear-gradient(45deg, rgb(87, 37, 37), rgb(161, 90, 90));
+        font-family: sans-serif;
+        color: whitesmoke;
+        margin: 0;
+      }
+      #screen {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+      #gameCanvas {
+        background-color: white;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="screen">
+      <canvas width="512" height="512" id="gameCanvas"></canvas>
+      <div id="name">Confetti Circle 1</div>
+    </div>
+    <script>
+      //configuration variables
+      const largerCirlceRadius = 180;
+      const smallerCricleRadius = 60;
+      const angularVelocity = 0.05;
+
+      //variables needed at a global scope
+      let currentAngle = 0;
+      let ticks;
+      let context;
+      let canvas;
+
+      /**
+       * Returns random number between two extreme values.
+       * Source: https://stackoverflow.com/questions/4959975/generate-random-number-between-two-numbers-in-javascript
+       * @param minRandomNumber {number} minimum possible value
+       * @param maxRandomNumber {number} maximum possible value
+       * @returns {number}
+       */
+      let randomNumberBetween = (minRandomNumber, maxRandomNumber) => {
+        return Math.floor(
+          Math.random() * (maxRandomNumber - minRandomNumber + 1) +
+            minRandomNumber
+        );
+      };
+
+      /**
+       * Creates a random color in rgba format.
+       * Minimum alpha is 0.3 (30%)
+       * Example: rgba(123, 123, 123, 0.5)
+       * @returns {string}
+       */
+      let getRandomColor = () => {
+        let randomRed = randomNumberBetween(0, 255);
+        let randomGreen = randomNumberBetween(0, 255);
+        let randomBlue = randomNumberBetween(0, 255);
+        let randomAlpha = (Math.random() + 0.3).toFixed(2);
+
+        return `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, ${randomAlpha})`;
+      };
+      /*
+      *  Gets called every tick, advances current angle by configured velocity and calculates position for circle to draw accordingly
+      */
+      function update() {
+        ticks++;
+        currentAngle += angularVelocity % (Math.PI * 2);
+        context.fillStyle = getRandomColor();
+        const x =
+          canvas.clientWidth / 2 + largerCirlceRadius * Math.cos(currentAngle);
+        const y =
+          canvas.clientHeight / 2 - largerCirlceRadius * Math.sin(currentAngle);
+        context.beginPath();
+        context.arc(x, y, smallerCricleRadius, 0, Math.PI * 2);
+        context.fill();
+        context.closePath();
+        requestAnimationFrame(update);
+      }
+
+      function initGame() {
+        canvas = document.querySelector("#gameCanvas");
+        context = canvas.getContext("2d");
+        ticks = 0;
+        requestAnimationFrame(update);
+      }
+
+      window.addEventListener("load", () => {
+        initGame();
+      });
+    </script>
+  </body>
+</html>
