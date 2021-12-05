@@ -50,8 +50,8 @@ function setCanvasSizeToConfig(canvas) {
 function initGame() {
   canvas = document.querySelector("#gameCanvas");
   GLOBALS.context = canvas.getContext("2d");
-  GLOBALS.globalStorageVariable = "put it here";
   player = new Player(100, 100);
+  player.init();
   ticks = 0;
   lastTimestamp = performance.now();
   setCanvasSizeToConfig(canvas);
