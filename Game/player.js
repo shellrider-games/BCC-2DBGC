@@ -24,6 +24,7 @@ class Player extends GameObject {
     this.#speed = 0.25;
     this.#velocity = { x: 0, y: 0 };
     this.#facing = 1;
+    this.init();
   }
 
   getInputVector() {

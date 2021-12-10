@@ -19,6 +19,15 @@ class GameObject {
   update() {}
 
   render() {}
+
+  getBoundingBox() {
+      return {
+          x: this.x - this.width/2,
+          y: this.y - this.height/2,
+          w: this.width,
+          h: this.height
+      }
+  }
 }
 
 export default GameObject;

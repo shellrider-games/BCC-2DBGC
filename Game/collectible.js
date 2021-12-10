@@ -6,6 +6,7 @@ class Collectible extends GameObject {
 
   constructor(x = 0, y = 0, width = 50, height = 50) {
     super(x, y, width, height);
+    this.init();
   }
 
   init() {
