@@ -1,20 +1,26 @@
 import GLOBALS from "./globalStorage.js";
-class Player {
-  #x;
-  #y;
-  #width;
-  #height;
+import GameObject from "./gameObject.js";
+
+class Player extends GameObject {
   #velocity;
   #facing;
   #speed;
-  #image;
+  image;
   #currentKeys = {};
 
-  constructor(x = 0, y = 0, width = 100, heigth = 100) {
-    this.#x = x;
-    this.#y = y;
-    this.#width = width;
-    this.#height = heigth;
+  init() {
+    document.addEventListener("keydown", (event) => {
+      this.#currentKeys[event.code] = true;
+    });
+    document.addEventListener("keyup", (event) => {
+      this.#currentKeys[event.code] = false;
+    });
+    this.image = new Image();
+    this.image.src = "./run-still.png";
+  }
+
+  constructor(x = 0, y = 0, width = 100, height = 100) {
+    super(x,y,width,height);
     this.#speed = 0.25;
     this.#velocity = { x: 0, y: 0 };
     this.#facing = 1;
@@ -40,17 +46,6 @@ class Player {
     return [e - w, s - n];
   }
 
-  init() {
-    document.addEventListener("keydown", (event) => {
-      this.#currentKeys[event.code] = true;
-    });
-    document.addEventListener("keyup", (event) => {
-      this.#currentKeys[event.code] = false;
-    });
-    this.#image = new Image();
-    this.#image.src = "./run-still.png";
-  }
-
   update(delta) {
     let velocity = this.getInputVector();
     const directionValue = Math.sqrt(velocity[0] ** 2 + velocity[1] ** 2);
@@ -66,25 +61,28 @@ class Player {
     if (this.#velocity.x > 0) {
       this.#facing = 1;
     }
-    this.#x = (this.#x + this.#velocity.x * delta) % GLOBALS.WORLD.width;
-    if (this.#x < 0) {
-      this.#x += GLOBALS.WORLD.width;
-    }
-    this.#y = (this.#y + this.#velocity.y * delta) % GLOBALS.WORLD.heigth;
-    if (this.#y < 0) {
-      this.#y += GLOBALS.WORLD.heigth;
-    }
+    this.x = this.x + this.#velocity.x * delta;
+    this.x = Math.max(
+      this.width / 2,
+      Math.min(this.x, GLOBALS.WORLD.width - this.width / 2)
+    );
+
+    this.y = this.y + this.#velocity.y * delta;
+    this.y = Math.max(
+      this.height / 2,
+      Math.min(this.y, GLOBALS.WORLD.height - this.height / 2)
+    );
   }
 
   render() {
-    GLOBALS.context.translate(this.#x, this.#y);
+    GLOBALS.context.translate(this.x, this.y);
     GLOBALS.context.scale(this.#facing, 1);
     GLOBALS.context.drawImage(
-      this.#image,
-      -this.#width / 2,
-      -this.#height / 2,
-      this.#width,
-      this.#height
+      this.image,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
     );
     GLOBALS.context.resetTransform();
   }

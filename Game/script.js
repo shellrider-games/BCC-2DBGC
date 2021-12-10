@@ -1,4 +1,5 @@
 import Player from "./player.js";
+import Collectible from "./collectible.js";
 import GLOBALS from "./globalStorage.js";
 
 //variables
@@ -11,16 +12,20 @@ const CONFIG = {
   canvasHeight: 600,
 };
 
-let player;
+let gameObjects = [];
 
 function render() {
   GLOBALS.context.clearRect(0, 0, CONFIG.canvasWidth, CONFIG.canvasHeight);
-  player.render();
+  gameObjects.forEach(function(gameObject){
+    gameObject.render();
+  });
 }
 
 function update(delta) {
   if (typeof delta === "number" && delta > 0) {
-    player.update(delta);
+    gameObjects.forEach(function(gameObject){
+      gameObject.update(delta);
+    });
   }
 }
 
@@ -44,14 +49,18 @@ function setCanvasSizeToConfig(canvas) {
   canvas.setAttribute("height", CONFIG.canvasHeight);
 
   GLOBALS.WORLD.width = CONFIG.canvasWidth;
-  GLOBALS.WORLD.heigth = CONFIG.canvasHeight;
+  GLOBALS.WORLD.height = CONFIG.canvasHeight;
 }
 
 function initGame() {
   canvas = document.querySelector("#gameCanvas");
   GLOBALS.context = canvas.getContext("2d");
-  player = new Player(100, 100);
+  let player = new Player(100, 100);
   player.init();
+  gameObjects.push(player);
+  let mouse = new Collectible(250, 250);
+  mouse.init();
+  gameObjects.push(mouse);
   ticks = 0;
   lastTimestamp = performance.now();
   setCanvasSizeToConfig(canvas);
