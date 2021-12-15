@@ -87,5 +87,14 @@ class Player extends GameObject {
     );
     GLOBALS.context.resetTransform();
   }
+
+  getBoundingBox() {
+    return {
+        x: this.x - this.width/2 + 25,
+        y: this.y - this.height/2 + 25,
+        w: this.width-25,
+        h: this.height-20
+    }
+}
 }
 export default Player;

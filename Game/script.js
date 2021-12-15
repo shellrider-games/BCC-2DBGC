@@ -1,5 +1,6 @@
 import Player from "./player.js";
 import Collectible from "./collectible.js";
+import PointsDisplay from "./pointsDisplay.js";
 import RandomDispatcher from "./randomDispatcher.js";
 import GLOBALS from "./globalStorage.js";
 import { randomNumberBetween } from "./toolBox.js";
@@ -8,6 +9,7 @@ import { randomNumberBetween } from "./toolBox.js";
 let canvas;
 let ticks;
 let lastTimestamp;
+let pointsDisplay;
 
 const CONFIG = {
   canvasWidth: 800,
@@ -35,6 +37,8 @@ function update(delta) {
   collectibles.forEach((collectible) => {
     if (checkCollisionBetween(player, collectible))
       removeItems.push(collectible);
+    pointsDisplay.increase();
+
   });
 
   removeItems.forEach((collectible) => {
@@ -69,11 +73,14 @@ function setCanvasSizeToConfig(canvas) {
 function initGame() {
   canvas = document.querySelector("#gameCanvas");
   GLOBALS.context = canvas.getContext("2d");
+  setCanvasSizeToConfig(canvas);
+  pointsDisplay = new PointsDisplay();
+  gameObjects.push(pointsDisplay);
   player = new Player(100, 100);
   gameObjects.push(player);
   ticks = 0;
   lastTimestamp = performance.now();
-  setCanvasSizeToConfig(canvas);
+
   setFontProperties();
 
   let randomDispatcher = new RandomDispatcher(
