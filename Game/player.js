@@ -11,8 +11,12 @@ class Player extends GameObject {
   animationstate;
 
   init() {
-    document.addEventListener("keydown", (event) => {
-      event.preventDefault();
+    const preventDefaultArray = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
+      document.addEventListener("keydown", (event) => {
+      if(preventDefaultArray.includes(event.code)){
+        console.log("prevented");
+        event.preventDefault();
+      }
       this.#currentKeys[event.code] = true;
     });
     document.addEventListener("keyup", (event) => {
@@ -78,6 +82,13 @@ class Player extends GameObject {
     return [e - w, s - n];
   }
 
+  currentSpeedFactor () {
+    if (typeof this.#currentKeys["Space"] === "boolean" && this.#currentKeys["Space"]){
+      return 1.5;
+    }
+    return 1;
+  }
+
   update(delta) {
     let velocity = this.getInputVector();
     const directionValue = Math.sqrt(velocity[0] ** 2 + velocity[1] ** 2);
@@ -85,8 +96,8 @@ class Player extends GameObject {
       velocity[0] /= directionValue;
       velocity[1] /= directionValue;
     }
-    this.#velocity.x = velocity[0] * this.#speed;
-    this.#velocity.y = velocity[1] * this.#speed;
+    this.#velocity.x = velocity[0] * this.#speed * this.currentSpeedFactor();
+    this.#velocity.y = velocity[1] * this.#speed * this.currentSpeedFactor();
     if (this.#velocity.x < 0) {
       this.#facing = -1;
     }
