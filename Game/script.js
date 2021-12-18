@@ -35,9 +35,11 @@ function update(delta) {
   }
   let removeItems = [];
   collectibles.forEach((collectible) => {
-    if (checkCollisionBetween(player, collectible))
+    if (checkCollisionBetween(player, collectible)) {
       removeItems.push(collectible);
-    pointsDisplay.increase();
+      pointsDisplay.increase();
+    }
+      
 
   });
 

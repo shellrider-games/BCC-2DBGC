@@ -7,16 +7,46 @@ class Player extends GameObject {
   #speed;
   image;
   #currentKeys = {};
+  sprites;
+  animationstate;
 
   init() {
     document.addEventListener("keydown", (event) => {
+      event.preventDefault();
       this.#currentKeys[event.code] = true;
     });
     document.addEventListener("keyup", (event) => {
       this.#currentKeys[event.code] = false;
     });
-    this.image = new Image();
-    this.image.src = "./run-still.png";
+
+    this.sprites = {
+      run: {
+        src: './run-sprite.png',
+        frames: 8,
+        fps: 16,
+        image: null,
+        frameSize: {
+          width: 400,
+          height: 400,
+        },
+      },
+      idle: {
+        src: './idle-sprite.png',
+        frames: 10,
+        fps: 16,
+        image: null,
+        frameSize: {
+          width: 400,
+          height: 400,
+        },
+      },
+    }
+
+    for (let sprite in this.sprites){
+      this.sprites[sprite].image = new Image();
+      this.sprites[sprite].image.src = this.sprites[sprite].src;
+    }
+
   }
 
   constructor(x = 0, y = 0, width = 100, height = 100) {
@@ -24,6 +54,7 @@ class Player extends GameObject {
     this.#speed = 0.25;
     this.#velocity = { x: 0, y: 0 };
     this.#facing = 1;
+    this.animationstate = "idle";
     this.init();
   }
 
@@ -62,24 +93,37 @@ class Player extends GameObject {
     if (this.#velocity.x > 0) {
       this.#facing = 1;
     }
+    if (this.#velocity.x === 0 && this.#velocity.y === 0) {
+      this.animationstate = "idle";
+    } else {
+      this.animationstate = "run";
+    }
     this.x = this.x + this.#velocity.x * delta;
     this.x = Math.max(
-      this.width / 2,
-      Math.min(this.x, GLOBALS.WORLD.width - this.width / 2)
+      this.width / 2 - 20,
+      Math.min(this.x, GLOBALS.WORLD.width - this.width / 2 + 20)
     );
 
     this.y = this.y + this.#velocity.y * delta;
     this.y = Math.max(
-      this.height / 2,
-      Math.min(this.y, GLOBALS.WORLD.height - this.height / 2)
+      this.height / 2 - 5,
+      Math.min(this.y, GLOBALS.WORLD.height - this.height / 2 + 5)
     );
   }
 
   render() {
     GLOBALS.context.translate(this.x, this.y);
     GLOBALS.context.scale(this.#facing, 1);
+
+    
+    const coords = this.getImageSpriteCoordinates(this.sprites[this.animationstate]);
+
     GLOBALS.context.drawImage(
-      this.image,
+      this.sprites[this.animationstate].image,
+      coords.sourceX,
+      coords.sourceY,
+      coords.sourceWidth,
+      coords.sourceHeight,
       -this.width / 2,
       -this.height / 2,
       this.width,
@@ -88,12 +132,24 @@ class Player extends GameObject {
     GLOBALS.context.resetTransform();
   }
 
+  getImageSpriteCoordinates(sprite){
+    const frameX = Math.floor(performance.now()/1000 * sprite.fps % sprite.frames);
+
+    const coords = {
+      sourceX: frameX * sprite.frameSize.width,
+      sourceY: 0,
+      sourceWidth: sprite.frameSize.width,
+      sourceHeight: sprite.frameSize.height,
+    }
+    return coords;
+  }
+
   getBoundingBox() {
     return {
-        x: this.x - this.width/2 + 25,
-        y: this.y - this.height/2 + 25,
-        w: this.width-25,
-        h: this.height-20
+        x: this.x - this.width/2 + 20,
+        y: this.y - this.height/2 + 5,
+        w: this.width-40,
+        h: this.height-10
     }
 }
 }

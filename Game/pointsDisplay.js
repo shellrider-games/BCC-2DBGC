@@ -16,9 +16,12 @@ class PointsDisplay extends GameObject {
     render() {
         GLOBALS.context.translate(this.x, this.y);
         GLOBALS.context.textAlign = "right";
+        GLOBALS.context.fillStyle = "yellow";
+        GLOBALS.context.ellipse(0,-35, 100,50,0,0,2 * Math.PI);
+        GLOBALS.context.fill();
         GLOBALS.context.fillStyle = "black";
         GLOBALS.context.font = "42px"
-        GLOBALS.context.fillText(`Points: ${this.points}`, 0, 0);
+        GLOBALS.context.fillText(`${this.points}`, 0, 0);
         GLOBALS.context.resetTransform();
     }
 }
