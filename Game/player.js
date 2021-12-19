@@ -91,6 +91,7 @@ class Player extends GameObject {
 
   update(delta) {
     let velocity = this.getInputVector();
+    //Make sure the player does not run faster while moving diagonal
     const directionValue = Math.sqrt(velocity[0] ** 2 + velocity[1] ** 2);
     if (directionValue) {
       velocity[0] /= directionValue;
@@ -109,6 +110,8 @@ class Player extends GameObject {
     } else {
       this.animationstate = "run";
     }
+    
+    //Enforces the player to stay inside the World
     this.x = this.x + this.#velocity.x * delta;
     this.x = Math.max(
       this.width / 2 - 20,
@@ -156,6 +159,7 @@ class Player extends GameObject {
   }
 
   getBoundingBox() {
+    //Adjusted bounding box to be smaller than image due to image being larger than displayed character
     return {
         x: this.x - this.width/2 + 20,
         y: this.y - this.height/2 + 5,
