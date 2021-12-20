@@ -1,3 +1,5 @@
+import GLOBALS from "./globalStorage.js";
+
 class GameObject {
   x;
   y;
@@ -18,7 +20,15 @@ class GameObject {
 
   update() {}
 
-  render() {}
+  render() {
+      if (GLOBALS.debug) {
+        const bb = this.getBoundingBox();
+        GLOBALS.context.translate(bb.x, bb.y);
+        GLOBALS.context.strokeStyle = "magenta";
+        GLOBALS.context.strokeRect(0,0, bb.w, bb.h);
+        GLOBALS.context.resetTransform();
+      }
+  }
 
   getBoundingBox() {
       return {

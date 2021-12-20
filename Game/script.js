@@ -39,13 +39,10 @@ function update(delta) {
       removeItems.push(collectible);
       pointsDisplay.increase();
     }
-      
-
   });
 
   removeItems.forEach((collectible) => {
-    collectibles.splice(collectibles.indexOf(collectible), 1);
-    gameObjects.splice(gameObjects.indexOf(collectible), 1);
+    removeCollectible(collectible);
   });
 }
 
@@ -72,6 +69,11 @@ function setCanvasSizeToConfig(canvas) {
   GLOBALS.WORLD.height = CONFIG.canvasHeight;
 }
 
+function removeCollectible(collectible) {
+  collectibles.splice(collectibles.indexOf(collectible), 1);
+  gameObjects.splice(gameObjects.indexOf(collectible), 1);
+}
+
 function initGame() {
   canvas = document.querySelector("#gameCanvas");
   GLOBALS.context = canvas.getContext("2d");
@@ -91,11 +93,22 @@ function initGame() {
         randomNumberBetween(25, GLOBALS.WORLD.width - 25),
         randomNumberBetween(25, GLOBALS.WORLD.height - 25)
       );
+      mouse.onRemove(() => {
+        console.log(mouse);
+        removeCollectible(mouse);
+      });
       gameObjects.push(mouse);
       collectibles.push(mouse);
     },
     { min: 1000, max: 6000 }
   );
+
+  document.addEventListener("keydown", (event) => {
+    if (event.code === "KeyD") {
+      event.preventDefault();
+      GLOBALS.debug = !GLOBALS.debug;
+    }
+  });
 
   requestAnimationFrame(gameLoop);
 }

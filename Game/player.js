@@ -11,10 +11,14 @@ class Player extends GameObject {
   animationstate;
 
   init() {
-    const preventDefaultArray = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"];
-      document.addEventListener("keydown", (event) => {
-      if(preventDefaultArray.includes(event.code)){
-        console.log("prevented");
+    const preventDefaultArray = [
+      "ArrowUp",
+      "ArrowRight",
+      "ArrowDown",
+      "ArrowLeft",
+    ];
+    document.addEventListener("keydown", (event) => {
+      if (preventDefaultArray.includes(event.code)) {
         event.preventDefault();
       }
       this.#currentKeys[event.code] = true;
@@ -25,7 +29,7 @@ class Player extends GameObject {
 
     this.sprites = {
       run: {
-        src: './run-sprite.png',
+        src: "./run-sprite.png",
         frames: 8,
         fps: 16,
         image: null,
@@ -35,7 +39,7 @@ class Player extends GameObject {
         },
       },
       idle: {
-        src: './idle-sprite.png',
+        src: "./idle-sprite.png",
         frames: 10,
         fps: 16,
         image: null,
@@ -44,17 +48,16 @@ class Player extends GameObject {
           height: 400,
         },
       },
-    }
+    };
 
-    for (let sprite in this.sprites){
+    for (let sprite in this.sprites) {
       this.sprites[sprite].image = new Image();
       this.sprites[sprite].image.src = this.sprites[sprite].src;
     }
-
   }
 
   constructor(x = 0, y = 0, width = 100, height = 100) {
-    super(x,y,width,height);
+    super(x, y, width, height);
     this.#speed = 0.25;
     this.#velocity = { x: 0, y: 0 };
     this.#facing = 1;
@@ -82,8 +85,11 @@ class Player extends GameObject {
     return [e - w, s - n];
   }
 
-  currentSpeedFactor () {
-    if (typeof this.#currentKeys["Space"] === "boolean" && this.#currentKeys["Space"]){
+  currentSpeedFactor() {
+    if (
+      typeof this.#currentKeys["Space"] === "boolean" &&
+      this.#currentKeys["Space"]
+    ) {
       return 1.5;
     }
     return 1;
@@ -110,7 +116,7 @@ class Player extends GameObject {
     } else {
       this.animationstate = "run";
     }
-    
+
     //Enforces the player to stay inside the World
     this.x = this.x + this.#velocity.x * delta;
     this.x = Math.max(
@@ -126,11 +132,13 @@ class Player extends GameObject {
   }
 
   render() {
+    super.render();
     GLOBALS.context.translate(this.x, this.y);
     GLOBALS.context.scale(this.#facing, 1);
 
-    
-    const coords = this.getImageSpriteCoordinates(this.sprites[this.animationstate]);
+    const coords = this.getImageSpriteCoordinates(
+      this.sprites[this.animationstate]
+    );
 
     GLOBALS.context.drawImage(
       this.sprites[this.animationstate].image,
@@ -146,26 +154,28 @@ class Player extends GameObject {
     GLOBALS.context.resetTransform();
   }
 
-  getImageSpriteCoordinates(sprite){
-    const frameX = Math.floor(performance.now()/1000 * sprite.fps % sprite.frames);
+  getImageSpriteCoordinates(sprite) {
+    const frameX = Math.floor(
+      ((performance.now() / 1000) * sprite.fps) % sprite.frames
+    );
 
     const coords = {
       sourceX: frameX * sprite.frameSize.width,
       sourceY: 0,
       sourceWidth: sprite.frameSize.width,
       sourceHeight: sprite.frameSize.height,
-    }
+    };
     return coords;
   }
 
   getBoundingBox() {
     //Adjusted bounding box to be smaller than image due to image being larger than displayed character
-    return {
-        x: this.x - this.width/2 + 20,
-        y: this.y - this.height/2 + 5,
-        w: this.width-40,
-        h: this.height-10
-    }
-}
+    const bb = super.getBoundingBox();
+    bb.x += this.width * 0.2;
+    bb.y += this.height * 0.1;
+    bb.w -= this.width * 0.4;
+    bb.h -= this.height * 0.15;
+    return bb;
+  }
 }
 export default Player;
