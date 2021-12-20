@@ -1,6 +1,9 @@
 import GameObject from "./gameObject.js";
 import GLOBALS from "./globalStorage.js";
 
+/*
+Class that represents collectible objects on the game field
+*/
 class Collectible extends GameObject {
   image;
 
