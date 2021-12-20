@@ -17,17 +17,7 @@ class Collectible extends GameObject {
     this.image.src = "./mouse.png";
   }
 
-  render() {
-    GLOBALS.context.translate(this.x, this.y);
-    GLOBALS.context.drawImage(
-      this.image,
-      -this.width / 2,
-      -this.height / 2,
-      this.width,
-      this.height
-    );
-    GLOBALS.context.resetTransform();
-  }
+
 }
 
 export default Collectible;
